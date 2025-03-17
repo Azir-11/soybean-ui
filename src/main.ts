@@ -3,6 +3,7 @@ import '@unocss/reset/tailwind.css';
 import 'uno.css';
 import App from './App.vue';
 import { router } from './router';
+import './styles/global.css';
 
 async function setupApp() {
   const app = createApp(App);

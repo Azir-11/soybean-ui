@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { Component } from 'vue';
-import { useDark } from '@vueuse/core';
 import { useRouteQuery } from '@vueuse/router';
-import { SButtonIcon, SCard, SScrollArea, STabs, SToastProvider } from 'soy-ui';
+import { SCard, SScrollArea, STabs, SToastProvider } from 'soy-ui';
 import type { TabsOption } from 'soy-ui';
-import { Moon, Sun } from 'lucide-vue-next';
+import ThemeToggle from '@/components/theme-toggle.vue';
 import UiAccordion from './modules/accordion.vue';
 import UiAlert from './modules/alert.vue';
 import UiAlertDialog from './modules/alert-dialog.vue';
@@ -42,6 +41,7 @@ import UiSegment from './modules/segment.vue';
 import UiSelect from './modules/select.vue';
 import UiSeparator from './modules/separator.vue';
 import UiSheet from './modules/sheet.vue';
+import UiSidebar from './modules/sidebar.vue';
 import UiSkeleton from './modules/skeleton.vue';
 import UiSlider from './modules/slider.vue';
 import UiSonner from './modules/sonner.vue';
@@ -60,12 +60,6 @@ defineOptions({
 });
 
 const activeTab = useRouteQuery('tab', 'accordion' as string);
-
-const isDark = useDark();
-
-function toggleDark() {
-  isDark.value = !isDark.value;
-}
 
 interface TabConfig extends TabsOption {
   component: Component;
@@ -258,6 +252,11 @@ const tabs: TabConfig[] = [
     component: UiSheet
   },
   {
+    value: 'sidebar',
+    label: 'Sidebar',
+    component: UiSidebar
+  },
+  {
     value: 'skeleton',
     label: 'Skeleton',
     component: UiSkeleton
@@ -325,10 +324,7 @@ const tabs: TabConfig[] = [
     <div class="h-full p-16px">
       <SCard title="Soybean UI Components" class="h-full lt-sm:h-auto">
         <template #extra>
-          <SButtonIcon size="lg" @click="toggleDark">
-            <Sun v-if="isDark" />
-            <Moon v-else />
-          </SButtonIcon>
+          <ThemeToggle />
         </template>
         <STabs
           v-model="activeTab"

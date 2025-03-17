@@ -35,6 +35,7 @@ export * from './variants/segment';
 export * from './variants/select';
 export * from './variants/separator';
 export * from './variants/sheet';
+export * from './variants/sidebar';
 export * from './variants/skeleton';
 export * from './variants/slider';
 export * from './variants/stepper';

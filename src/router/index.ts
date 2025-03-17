@@ -12,6 +12,11 @@ export const router = createRouter({
       name: 'Demo',
       path: '/demo',
       component: () => import('../views/demo/index.vue')
+    },
+    {
+      name: 'DemoSidebar',
+      path: '/demo/sidebar',
+      component: () => import('../views/demo/sidebar.vue')
     }
   ]
 });

@@ -7,13 +7,16 @@ import type {
   FeedbackColorOfThemeCssVars,
   FeedbackColorOfThemeCssVarsVariant,
   PresetShadcnOptions,
+  SidebarColorOfThemeCssVarKey,
+  SidebarColorOfThemeCssVars,
+  SidebarColorOfThemeCssVarsVariant,
   ThemeCSSVarKey,
   ThemeCSSVars,
   ThemeCSSVarsVariant,
   ThemeConfig
 } from './types';
 
-type CSSVarKey = ThemeCSSVarKey | FeedbackColorOfThemeCssVarKey;
+type CSSVarKey = ThemeCSSVarKey | FeedbackColorOfThemeCssVarKey | SidebarColorOfThemeCssVarKey;
 
 const themeCSSVarKeys: CSSVarKey[] = [
   'background',
@@ -42,12 +45,20 @@ const themeCSSVarKeys: CSSVarKey[] = [
   'accent-foreground',
   'border',
   'input',
-  'ring'
+  'ring',
+  'sidebar-background',
+  'sidebar-foreground',
+  'sidebar-border',
+  'sidebar-ring',
+  'sidebar-primary',
+  'sidebar-primary-foreground',
+  'sidebar-accent',
+  'sidebar-accent-foreground'
 ];
 
 const themeColorKeys: CSSVarKey[] = ['primary', 'destructive', 'success', 'warning', 'info', 'carbon'];
 
-function getColorCSSVars(color: ThemeCSSVars & FeedbackColorOfThemeCssVars) {
+function getColorCSSVars(color: ThemeCSSVars & FeedbackColorOfThemeCssVars & SidebarColorOfThemeCssVars) {
   const cssVars = Object.entries(color)
     .map(([item, value]) => {
       const key = item as CSSVarKey;
@@ -191,6 +202,33 @@ function createBuiltinFeedbackColorTheme() {
   return feedbackColor;
 }
 
+function createBuiltinSidebarColorTheme() {
+  const sidebarColor: SidebarColorOfThemeCssVarsVariant = {
+    light: {
+      'sidebar-background': '0 0% 98%',
+      'sidebar-foreground': '240 5.3% 26.1%',
+      'sidebar-primary': '236.9 100% 69.61%',
+      'sidebar-primary-foreground': '0 0% 98%',
+      'sidebar-accent': '240 4.8% 95.9%',
+      'sidebar-accent-foreground': '240 5.9% 10%',
+      'sidebar-border': '220 13% 91%',
+      'sidebar-ring': '217.2 91.2% 59.8%'
+    },
+    dark: {
+      'sidebar-background': '240 5.9% 10%',
+      'sidebar-foreground': '240 4.8% 95.9%',
+      'sidebar-primary': '236.9 100% 69.61%',
+      'sidebar-primary-foreground': '0 0% 100%',
+      'sidebar-accent': '240 3.7% 15.9%',
+      'sidebar-accent-foreground': '240 4.8% 95.9%',
+      'sidebar-border': '240 3.7% 15.9%',
+      'sidebar-ring': '217.2 91.2% 59.8%'
+    }
+  };
+
+  return sidebarColor;
+}
+
 export function generateCSSVars(theme: PresetShadcnOptions, onlyOne = true): string {
   if (Array.isArray(theme)) {
     return theme.map(t => generateCSSVars(t, false)).join('\n');
@@ -200,7 +238,8 @@ export function generateCSSVars(theme: PresetShadcnOptions, onlyOne = true): str
     color = 'default',
     radius = 0.5,
     darkSelector = '.dark',
-    feedbackColor = createBuiltinFeedbackColorTheme()
+    feedbackColor = createBuiltinFeedbackColorTheme(),
+    sidebar = createBuiltinSidebarColorTheme()
   } = theme;
 
   let cssStyle = '';
@@ -211,8 +250,8 @@ export function generateCSSVars(theme: PresetShadcnOptions, onlyOne = true): str
     }
   } else {
     const { light, dark, name } = getColorTheme(color);
-    const lightVars = getColorCSSVars({ ...light, ...feedbackColor.light });
-    const darkVars = getColorCSSVars({ ...dark, ...feedbackColor.dark });
+    const lightVars = getColorCSSVars({ ...light, ...feedbackColor.light, ...sidebar.light });
+    const darkVars = getColorCSSVars({ ...dark, ...feedbackColor.dark, ...sidebar.dark });
 
     cssStyle += getColorCSSVarsStyles(lightVars, darkVars, { radius, themeName: !onlyOne && name, darkSelector });
   }
